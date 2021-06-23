@@ -5,7 +5,7 @@ import {
 	genGroupDto,
 	genGroupSet,
 	genImports,
-} from './actionElements';
+} from './codeGenerators';
 import { DataRoot } from './types';
 import { genFileName } from './utils';
 

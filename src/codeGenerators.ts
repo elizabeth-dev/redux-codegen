@@ -4,32 +4,32 @@ import ts from 'typescript';
 import { Action, ActionGroup, ImportMap } from './types';
 import { genConst, parseOptional } from './utils';
 
-export const genActionName = (actionKey: string) =>
+const genActionName = (actionKey: string) =>
 	pascalCase(`${actionKey}Action`, {
 		transform: pascalCaseTransformMerge,
 	});
 
-export const genActionDefName = (actionKey: string) =>
+const genActionDefName = (actionKey: string) =>
 	pascalCase(`I${genActionName(actionKey)}`, {
 		transform: pascalCaseTransformMerge,
 	});
 
-export const genActionFnName = (actionKey: string) =>
+const genActionFnName = (actionKey: string) =>
 	camelCase(`${actionKey}Fn`, {
 		transform: camelCaseTransformMerge,
 	});
 
-export const genGroupDtoName = (groupKey: string) =>
+const genGroupDtoName = (groupKey: string) =>
 	pascalCase(`${groupKey}ActionsDto`, {
 		transform: pascalCaseTransformMerge,
 	});
 
-export const genGroupSetName = (groupKey: string) =>
+const genGroupSetName = (groupKey: string) =>
 	pascalCase(`${groupKey}Actions`, {
 		transform: pascalCaseTransformMerge,
 	});
 
-export const genActionId = (
+const genActionId = (
 	actionKey: string,
 	namespace?: string
 ): ts.VariableStatement => {
@@ -44,7 +44,7 @@ export const genActionId = (
 	);
 };
 
-export const genActionDef = (
+const genActionDef = (
 	actionKey: string,
 	payloadEntries: [string, string][]
 ): ts.InterfaceDeclaration => {
@@ -80,7 +80,7 @@ export const genActionDef = (
 	);
 };
 
-export const genActionFn = (
+const genActionFn = (
 	actionKey: string,
 	payloadEntries: [string, string][]
 ): ts.VariableStatement => {
