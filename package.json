@@ -1,0 +1,19 @@
+{
+	"name": "@sinope/redux-codegen",
+	"version": "0.0.1",
+	"main": "index.ts",
+	"repository": "git@github.com:elizabeth-dev/redux-codegen.git",
+	"author": "Elizabeth Martín Campos <elizabeth@sinope.app>",
+	"license": "AGPL-3.0-or-later",
+	"private": false,
+	"peerDependencies": {
+		"typescript": "^4.3.4"
+	},
+	"devDependencies": {
+		"@types/node": "^15.12.3"
+	},
+	"dependencies": {
+		"camel-case": "^4.1.2",
+		"pascal-case": "^3.1.2"
+	}
+}
