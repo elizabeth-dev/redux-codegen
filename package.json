@@ -1,11 +1,19 @@
 {
 	"name": "@sinope/redux-codegen",
-	"version": "0.0.1",
-	"main": "index.ts",
+	"version": "0.1.0",
+	"main": "dist/index.js",
+	"bin": {
+		"redux-codegen": "dist/index.js"
+	},
 	"repository": "git@github.com:elizabeth-dev/redux-codegen.git",
 	"author": "Elizabeth Martín Campos <elizabeth@sinope.app>",
 	"license": "AGPL-3.0-or-later",
 	"private": false,
+	"scripts": {
+		"prepublishOnly": "tsc",
+		"start": "ts-node src/index.ts",
+		"build": "tsc"
+	},
 	"peerDependencies": {
 		"typescript": "^4.3.4"
 	},
@@ -14,6 +22,8 @@
 	},
 	"dependencies": {
 		"camel-case": "^4.1.2",
-		"pascal-case": "^3.1.2"
-	}
+		"pascal-case": "^3.1.2",
+		"yaml": "^1.10.2"
+	},
+	"types": "dist/index.d.ts"
 }
