@@ -167,8 +167,6 @@ export const genImports = (
 			{}
 		);
 
-	console.log(importList);
-
 	return Object.keys(importList).map((importPath) =>
 		ts.factory.createImportDeclaration(
 			undefined,
