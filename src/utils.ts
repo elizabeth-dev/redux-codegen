@@ -1,3 +1,4 @@
+import { readdirSync } from 'fs';
 import ts from 'typescript';
 
 export const genConst = <TKind extends ts.KeywordTypeSyntaxKind>(
@@ -31,3 +32,10 @@ export const parseOptional = (
 
 export const genFileName = (groupKey: string): string =>
 	`${groupKey}.actions.ts`;
+
+export const recursiveReaddir = (path: string): string[] =>
+	readdirSync(path, { withFileTypes: true }).flatMap((el) =>
+		el.isDirectory()
+			? recursiveReaddir(`${path}/${el.name}`)
+			: `${path}/${el.name}`
+	);
