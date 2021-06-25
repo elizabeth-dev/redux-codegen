@@ -39,7 +39,7 @@ const genActionId = (
 	return genConst(
 		actionName,
 		undefined,
-		ts.factory.createStringLiteral(prefix + actionName),
+		ts.factory.createStringLiteral(prefix + actionName, true),
 		true
 	);
 };
@@ -169,7 +169,7 @@ export const genImports = (
 					)
 				)
 			),
-			ts.factory.createStringLiteral(importPath)
+			ts.factory.createStringLiteral(importPath, true)
 		)
 	);
 };
