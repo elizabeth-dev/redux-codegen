@@ -149,7 +149,11 @@ export const genImports = (
 	const imports = { ...topImports, ...group.imports };
 
 	const importList = Object.values(group.actions)
-		.flatMap((el) => (el?.payload ? Object.values(el.payload) : []))
+		.flatMap((el) =>
+			el?.payload
+				? Object.values(el.payload).map((el) => el.replace(/[]$/, ''))
+				: []
+		)
 		.reduce<{ [path: string]: string[] }>(
 			(acc, el) =>
 				imports[el]
