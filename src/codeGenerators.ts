@@ -141,7 +141,7 @@ export const genImports = (
 	const imports = { ...topImports, ...group.imports };
 
 	const importList = Object.values(group.actions)
-		.flatMap((el) => (el.payload ? Object.values(el.payload) : []))
+		.flatMap((el) => (el?.payload ? Object.values(el.payload) : []))
 		.reduce<{ [path: string]: string[] }>(
 			(acc, el) =>
 				imports[el]
@@ -177,11 +177,13 @@ export const genImports = (
 export const genActions = (
 	groupKey: string,
 	actions: {
-		[action: string]: Action;
+		[action: string]: Action | null;
 	}
 ): ts.Node[][] =>
 	Object.entries(actions).map(([actionKey, action]) => {
-		const payloadEntries = action.payload ? Object.entries(action.payload) : [];
+		const payloadEntries = action?.payload
+			? Object.entries(action.payload)
+			: [];
 
 		const actionId = genActionId(actionKey, groupKey);
 		const actionDef = genActionDef(actionKey, payloadEntries);
@@ -192,7 +194,7 @@ export const genActions = (
 
 export const genGroupDto = (
 	groupKey: string,
-	actions: { [action: string]: Action }
+	actions: { [action: string]: Action | null }
 ): ts.TypeAliasDeclaration => {
 	const actionTypes = Object.keys(actions).map((actionKey) =>
 		ts.factory.createTypeReferenceNode(genActionDefName(actionKey))
@@ -209,15 +211,15 @@ export const genGroupDto = (
 
 export const genGroupSet = (
 	groupKey: string,
-	actions: { [action: string]: Action }
+	actions: { [action: string]: Action | null }
 ): ts.VariableStatement =>
 	genConst(
 		genGroupSetName(groupKey),
 		undefined,
 		ts.factory.createObjectLiteralExpression(
-			Object.entries(actions).map(([actionKey, { alias }]) =>
+			Object.entries(actions).map(([actionKey, actionVal]) =>
 				ts.factory.createPropertyAssignment(
-					alias ?? actionKey,
+					actionVal?.alias ?? actionKey,
 					ts.factory.createIdentifier(genActionFnName(actionKey))
 				)
 			),

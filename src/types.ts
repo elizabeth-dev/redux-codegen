@@ -5,7 +5,7 @@ export interface DataRoot {
 
 export interface ActionGroup {
 	actions: {
-		[action: string]: Action;
+		[action: string]: Action | null;
 	};
 	imports?: ImportMap;
 }
