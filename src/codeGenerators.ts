@@ -154,12 +154,14 @@ export const genImports = (
 				? Object.values(el.payload).map((el) => el.replace(/[]$/, ''))
 				: []
 		)
-		.reduce<{ [path: string]: string[] }>(
+		.reduce<{ [path: string]: Set<string> }>(
 			(acc, el) =>
 				imports[el]
 					? {
 							...acc,
-							[imports[el]]: [...(acc[imports[el]] ?? []), el],
+							[imports[el]]: acc[imports[el]]
+								? acc[imports[el]].add(el)
+								: new Set<string>().add(el),
 					  }
 					: acc,
 			{}
@@ -173,7 +175,7 @@ export const genImports = (
 				false,
 				undefined,
 				ts.factory.createNamedImports(
-					importList[importPath].map((importName) =>
+					[...importList[importPath]].map((importName) =>
 						ts.factory.createImportSpecifier(
 							undefined,
 							ts.factory.createIdentifier(importName)
