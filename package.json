@@ -1,6 +1,6 @@
 {
 	"name": "@sinope/redux-codegen",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"main": "dist/index.js",
 	"bin": {
 		"redux-codegen": "dist/index.js"
