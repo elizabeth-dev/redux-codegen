@@ -70,12 +70,16 @@ const genActionDef = (
 				undefined,
 				ts.factory.createTypeReferenceNode(`typeof ${genActionName(actionKey)}`) // Check how to generate typeof programatically
 			),
-			ts.factory.createPropertySignature(
-				undefined,
-				'payload',
-				undefined,
-				ts.factory.createTypeLiteralNode(payloadMembers)
-			),
+			...(payloadEntries.length > 0
+				? [
+						ts.factory.createPropertySignature(
+							undefined,
+							'payload',
+							undefined,
+							ts.factory.createTypeLiteralNode(payloadMembers)
+						),
+				  ]
+				: []),
 		]
 	);
 };
@@ -109,17 +113,21 @@ const genActionFn = (
 				'type',
 				ts.factory.createIdentifier(genActionName(actionKey))
 			),
-			ts.factory.createPropertyAssignment(
-				'payload',
-				ts.factory.createObjectLiteralExpression(
-					payloadEntries.map(([payloadKey]) =>
-						ts.factory.createShorthandPropertyAssignment(
-							parseOptional(payloadKey).value
-						)
-					),
-					true
-				)
-			),
+			...(payloadEntries.length > 0
+				? [
+						ts.factory.createPropertyAssignment(
+							'payload',
+							ts.factory.createObjectLiteralExpression(
+								payloadEntries.map(([payloadKey]) =>
+									ts.factory.createShorthandPropertyAssignment(
+										parseOptional(payloadKey).value
+									)
+								),
+								true
+							)
+						),
+				  ]
+				: []),
 		])
 	);
 	const actionFnValue = ts.factory.createArrowFunction(
