@@ -151,7 +151,7 @@ export const genImports = (
 	const importList = Object.values(group.actions)
 		.flatMap((el) =>
 			el?.payload
-				? Object.values(el.payload).map((el) => el.replace(/[]$/, ''))
+				? Object.values(el.payload).map((type) => type.replace(/\[\]$/, ''))
 				: []
 		)
 		.reduce<{ [path: string]: Set<string> }>(
@@ -166,6 +166,8 @@ export const genImports = (
 					: acc,
 			{}
 		);
+
+	console.log(importList);
 
 	return Object.keys(importList).map((importPath) =>
 		ts.factory.createImportDeclaration(
