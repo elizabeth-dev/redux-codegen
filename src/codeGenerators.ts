@@ -86,55 +86,42 @@ const genActionDef = (
 
 const genActionFn = (
 	actionKey: string,
-	payloadEntries: [string, string][]
+	hasPayload = false
 ): ts.VariableStatement => {
-	const actionFnParams = payloadEntries
-		.map(([name, type]) => ({ ...parseOptional(name), type }))
-		.sort(({ optional: a }, { optional: b }) => {
-			if (a === b) return 0;
+	const actionDefName = genActionDefName(actionKey);
 
-			return a ? 1 : -1;
-		})
-		.map(({ value, optional, type }) =>
-			ts.factory.createParameterDeclaration(
-				undefined,
-				undefined,
-				undefined,
-				value,
-				optional
-					? ts.factory.createToken(ts.SyntaxKind.QuestionToken)
-					: undefined,
-				ts.factory.createTypeReferenceNode(type)
-			)
-		);
 	const actionFnBody = ts.factory.createParenthesizedExpression(
 		ts.factory.createObjectLiteralExpression([
 			ts.factory.createPropertyAssignment(
 				'type',
 				ts.factory.createIdentifier(genActionName(actionKey))
 			),
-			...(payloadEntries.length > 0
-				? [
-						ts.factory.createPropertyAssignment(
-							'payload',
-							ts.factory.createObjectLiteralExpression(
-								payloadEntries.map(([payloadKey]) =>
-									ts.factory.createShorthandPropertyAssignment(
-										parseOptional(payloadKey).value
-									)
-								),
-								true
-							)
-						),
-				  ]
+			...(hasPayload
+				? [ts.factory.createShorthandPropertyAssignment('payload')]
 				: []),
 		])
 	);
 	const actionFnValue = ts.factory.createArrowFunction(
 		undefined,
 		undefined,
-		actionFnParams,
-		ts.factory.createTypeReferenceNode(genActionDefName(actionKey)),
+		hasPayload
+			? [
+					ts.factory.createParameterDeclaration(
+						undefined,
+						undefined,
+						undefined,
+						'payload',
+						undefined,
+						ts.factory.createIndexedAccessTypeNode(
+							ts.factory.createTypeReferenceNode(genActionDefName(actionKey)),
+							ts.factory.createLiteralTypeNode(
+								ts.factory.createStringLiteral('payload', true)
+							)
+						)
+					),
+			  ]
+			: [],
+		ts.factory.createTypeReferenceNode(actionDefName),
 		undefined,
 		actionFnBody
 	);
@@ -201,7 +188,7 @@ export const genActions = (
 
 		const actionId = genActionId(actionKey, groupKey);
 		const actionDef = genActionDef(actionKey, payloadEntries);
-		const actionFn = genActionFn(actionKey, payloadEntries);
+		const actionFn = genActionFn(actionKey, payloadEntries.length > 0);
 
 		return [actionId, actionDef, actionFn];
 	});
